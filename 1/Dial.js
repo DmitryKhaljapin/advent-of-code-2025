@@ -12,9 +12,12 @@ class Dial {
   }
 
   rotateLeft(distance) {
-    const ninesComplement = this._range - 1 - distance;
-    this.currentPosition =
-      (this.currentPosition + ninesComplement + 1 - this._range) % this._range;
+    const tmpPosition = (this.currentPosition - distance) % this._range;
+    if (tmpPosition < 0) {
+      this.currentPosition = this._range + tmpPosition;
+    } else {
+      this.currentPosition = tmpPosition;
+    }
   }
 }
 

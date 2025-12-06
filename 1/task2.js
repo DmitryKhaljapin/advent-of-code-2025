@@ -1,18 +1,46 @@
-const input = require('./input')
-const parser = require('./parser')
+const Dial = require("./Dial");
+const input = require("./input");
+const parser = require("./parser");
 
-const [list1, list2] = parser(input)
+const START_POSITION = 50;
+const RANGE = 100;
 
-let total = 0;
+const list = parser(input);
 
-for (let i = 0; i < list1.length; ++i) {
-    let count = 0 ;
-    for (let j = 0; j < list2.length; ++j) {
-        if (list1[i] === list2[j]) ++count;
+const rotations = list.map((rotation) => {
+  const [_, direction, distance] = rotation.match(/(\w)(\d+)/);
+
+  return {
+    direction,
+    distance: +distance,
+  };
+});
+
+const dial = new Dial(RANGE, START_POSITION);
+
+let zeroCount = 0;
+
+rotations.forEach(({ direction, distance }) => {
+  let zeroCrossedCount = 0;
+
+  if (direction === "R") {
+    zeroCrossedCount = Math.trunc((dial.currentPosition + distance) / RANGE);
+
+    dial.rotateRight(distance);
+  }
+  if (direction === "L") {
+    zeroCrossedCount = Math.trunc(distance / RANGE);
+
+    const tmpPosition = dial.currentPosition - distance;
+
+    if (tmpPosition <= 0 && dial.currentPosition !== 0) {
+      zeroCrossedCount++;
     }
 
-    total += list1[i] * count;
-    count = 0;
-}
+    dial.rotateLeft(distance);
+  }
 
-console.log(total)
+  zeroCount += zeroCrossedCount;
+});
+
+console.log(zeroCount);
