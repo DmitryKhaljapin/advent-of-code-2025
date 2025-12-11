@@ -21,7 +21,7 @@ banks.forEach((bank) => {
   for (let i = fistBattaryPossition + 1; i < bank.length; ++i) {
     if (+bank[i] > +secondBattary) secondBattary = bank[i];
   }
-  console.log(fistBattary, secondBattary);
+
   totalPower += +(fistBattary + secondBattary);
 
   fistBattary = "0";
